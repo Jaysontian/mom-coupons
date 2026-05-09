@@ -1,65 +1,183 @@
-import Image from "next/image";
+"use client";
+
+import { useEffect, useState } from "react";
+
+type Coupon = {
+  id: string;
+  title: string;
+  description: string;
+  emoji: string;
+};
+
+const COUPONS: Coupon[] = [
+  {
+    id: "breakfast",
+    title: "Breakfast in Bed",
+    description: "One morning of pancakes, fruit, and coffee — served right to your pillow.",
+    emoji: "🥞",
+  },
+  {
+    id: "dinner",
+    title: "Home-Cooked Dinner",
+    description: "Pick the menu. I'll cook it (and clean up after).",
+    emoji: "🍝",
+  },
+  {
+    id: "movie",
+    title: "Movie Night, Your Pick",
+    description: "Snacks included. No complaints from me — even for the rom-coms.",
+    emoji: "🎬",
+  },
+  {
+    id: "chores",
+    title: "A Day Off From Chores",
+    description: "I'll handle dishes, laundry, and whatever else is on the list.",
+    emoji: "🧺",
+  },
+  {
+    id: "drive",
+    title: "Personal Chauffeur",
+    description: "Wherever you need to go — I'm driving.",
+    emoji: "🚗",
+  },
+  {
+    id: "walk",
+    title: "Long Walk Together",
+    description: "A slow walk, good conversation, and maybe ice cream after.",
+    emoji: "🍦",
+  },
+  {
+    id: "hug",
+    title: "Unlimited Hugs",
+    description: "Never expires. Redeem as many times as you want.",
+    emoji: "🤗",
+  },
+  {
+    id: "wildcard",
+    title: "Wildcard Wish",
+    description: "Anything you want. Within reason. (Mostly.)",
+    emoji: "✨",
+  },
+];
+
+const STORAGE_KEY = "mom-coupons-redeemed-v1";
 
 export default function Home() {
+  const [redeemed, setRedeemed] = useState<Record<string, boolean>>({});
+  const [loaded, setLoaded] = useState(false);
+  const [celebrating, setCelebrating] = useState<string | null>(null);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) setRedeemed(JSON.parse(raw));
+    } catch {}
+    setLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    if (loaded) localStorage.setItem(STORAGE_KEY, JSON.stringify(redeemed));
+  }, [redeemed, loaded]);
+
+  const toggle = (id: string) => {
+    setRedeemed((prev) => ({ ...prev, [id]: !prev[id] }));
+    if (!redeemed[id]) {
+      setCelebrating(id);
+      setTimeout(() => setCelebrating((c) => (c === id ? null : c)), 1200);
+    }
+  };
+
+  const reset = () => setRedeemed({});
+  const count = Object.values(redeemed).filter(Boolean).length;
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <main className="flex-1 px-6 py-12 sm:py-16 max-w-6xl mx-auto w-full">
+      <header className="text-center mb-12 sm:mb-16">
+        <p className="uppercase tracking-[0.3em] text-xs sm:text-sm text-rose-500 mb-4">
+          Happy Mother&apos;s Day
+        </p>
+        <h1 className="text-4xl sm:text-6xl font-semibold tracking-tight text-rose-900">
+          Mom Coupons <span aria-hidden>💐</span>
+        </h1>
+        <p className="mt-5 max-w-xl mx-auto text-rose-700/80 text-base sm:text-lg leading-relaxed">
+          A little book of coupons, made just for you. Tap one to redeem it —
+          I&apos;ll be ready whenever you are.
+        </p>
+        <p className="mt-3 text-sm text-rose-500">
+          {count} of {COUPONS.length} redeemed
+        </p>
+      </header>
+
+      <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+        {COUPONS.map((coupon) => {
+          const isRedeemed = !!redeemed[coupon.id];
+          const isCelebrating = celebrating === coupon.id;
+          return (
+            <li key={coupon.id}>
+              <button
+                onClick={() => toggle(coupon.id)}
+                aria-pressed={isRedeemed}
+                className={`group relative w-full text-left rounded-2xl p-6 border-2 border-dashed transition-all duration-300 overflow-hidden ${
+                  isRedeemed
+                    ? "bg-rose-100/50 border-rose-300 opacity-60"
+                    : "bg-white/70 border-rose-300 hover:border-rose-400 hover:-translate-y-1 hover:shadow-xl shadow-rose-200/40 shadow-lg"
+                }`}
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div className="text-4xl" aria-hidden>
+                    {coupon.emoji}
+                  </div>
+                  <span
+                    className={`text-[10px] uppercase tracking-widest px-2 py-1 rounded-full border ${
+                      isRedeemed
+                        ? "border-rose-400 text-rose-500"
+                        : "border-rose-300 text-rose-600 bg-rose-50"
+                    }`}
+                  >
+                    {isRedeemed ? "Redeemed" : "Valid"}
+                  </span>
+                </div>
+                <h2
+                  className={`mt-5 text-xl font-semibold text-rose-900 ${
+                    isRedeemed ? "line-through decoration-rose-400/70" : ""
+                  }`}
+                >
+                  {coupon.title}
+                </h2>
+                <p className="mt-2 text-sm leading-relaxed text-rose-700/80">
+                  {coupon.description}
+                </p>
+                <div className="mt-6 pt-4 border-t border-dashed border-rose-200 flex items-center justify-between text-xs text-rose-500">
+                  <span>For: Mom 💖</span>
+                  <span>No expiration</span>
+                </div>
+                {isCelebrating && (
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute inset-0 flex items-center justify-center text-6xl animate-ping"
+                  >
+                    💖
+                  </span>
+                )}
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+
+      <footer className="mt-16 text-center">
+        {count > 0 && (
+          <button
+            onClick={reset}
+            className="text-xs uppercase tracking-widest text-rose-500 hover:text-rose-700 underline underline-offset-4"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+            Reset all coupons
+          </button>
+        )}
+        <p className="mt-8 text-sm text-rose-700/70">
+          Made with love. <span aria-hidden>❤️</span>
+        </p>
+      </footer>
+    </main>
   );
 }
