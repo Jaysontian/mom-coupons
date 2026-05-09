@@ -8,8 +8,8 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "Mom Coupons — Happy Mother's Day",
-  description: "A little book of coupons for the best mom in the world.",
+  title: "Mom Coupons",
+  description: "A small collection of memories, made for you.",
 };
 
 export default function RootLayout({
@@ -19,9 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${geistSans.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col bg-gradient-to-br from-rose-50 via-pink-50 to-amber-50 text-rose-950">
-        {children}
-      </body>
+      <body className="min-h-full bg-black text-white">{children}</body>
     </html>
   );
 }
