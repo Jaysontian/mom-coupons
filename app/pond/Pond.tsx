@@ -535,6 +535,16 @@ function Modal({
               {coupon.title}
             </h2>
             <p className="mt-3 text-white/80 leading-relaxed">{coupon.detail}</p>
+            {coupon.link && (
+              <a
+                href={coupon.link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-5 inline-block px-5 py-2.5 rounded-full bg-white text-black text-sm font-medium tracking-tight active:scale-[0.97] transition"
+              >
+                {coupon.link.label}
+              </a>
+            )}
           </div>
         )}
 
