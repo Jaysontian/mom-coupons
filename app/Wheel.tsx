@@ -4,10 +4,10 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { COUPONS } from "./data";
 
-const SPACING_DEG = 26;
+const SPACING_DEG = 18;
 const RADIUS = 380;
 const AXIS_X = -300;
-const TICK = 220;
+const TICK = 160;
 
 export default function Wheel() {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -62,7 +62,7 @@ export default function Wheel() {
 
   return (
     <div className="relative h-dvh w-full overflow-hidden bg-black text-white flex flex-col">
-      <section className="px-6 pt-20 pb-4 z-30 relative">
+      <section className="px-6 pt-14 pb-2 z-30 relative">
         <h1
           key={`t-${current.id}`}
           className="text-4xl font-semibold tracking-tight leading-[1.05] animate-[fade_400ms_ease]"
