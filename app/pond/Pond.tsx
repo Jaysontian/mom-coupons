@@ -71,7 +71,7 @@ export default function Pond() {
           caustic={0.1}
           size={0.6}
           speed={0.7}
-          scale={0.9}
+          scale={1.15}
           fit="cover"
         />
       )}
