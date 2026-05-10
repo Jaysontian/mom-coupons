@@ -106,6 +106,7 @@ export default function Pond() {
   const [selected, setSelected] = useState<Coupon | null>(null);
   const [revealed, setRevealed] = useState(false);
   const [revealedIds, setRevealedIds] = useState<Set<string>>(new Set());
+  const [entered, setEntered] = useState(false);
 
   useEffect(() => {
     const ids = new Set<string>();
@@ -260,7 +261,8 @@ export default function Pond() {
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/40" />
 
       <div className="absolute inset-0 z-10">
-        {items.map((it) => (
+        {entered &&
+          items.map((it, i) => (
           <div
             key={it.id}
             ref={(el) => {
@@ -289,18 +291,54 @@ export default function Pond() {
             }`}
             style={{ width: it.w, height: it.h }}
           >
-            {it.kind === "duck" ? (
-              <Duck />
-            ) : it.kind === "note" ? (
-              <Note />
-            ) : it.coupon && revealedIds.has(it.coupon.id) ? (
-              <RevealedCard coupon={it.coupon} />
-            ) : (
-              <Envelope />
-            )}
+            <div
+              className="w-full h-full animate-[pop_500ms_cubic-bezier(0.2,0.9,0.2,1.1)_both]"
+              style={{ animationDelay: `${i * 70}ms` }}
+            >
+              {it.kind === "duck" ? (
+                <Duck />
+              ) : it.kind === "note" ? (
+                <Note />
+              ) : it.coupon && revealedIds.has(it.coupon.id) ? (
+                <RevealedCard coupon={it.coupon} />
+              ) : (
+                <Envelope />
+              )}
+            </div>
           </div>
         ))}
       </div>
+
+      {!entered && (
+        <div className="absolute inset-0 z-30 flex items-center justify-center flex-col text-white animate-[fade_500ms_ease]">
+          <div className="text-2xl font-medium tracking-wide drop-shadow-lg">
+            May 10, 2026
+          </div>
+          <button
+            onClick={() => setEntered(true)}
+            className="mt-8 px-6 py-3 rounded-full bg-white/20 backdrop-blur-md ring-1 ring-white/40 text-white text-sm tracking-[0.2em] uppercase hover:bg-white/30 transition"
+          >
+            Unlock Gift
+          </button>
+        </div>
+      )}
+
+      {entered && (
+        <div className="absolute bottom-5 right-5 z-30 flex items-center gap-3 text-[11px] text-white/80 drop-shadow animate-[fade_700ms_ease]">
+          <span>May 10, 2026</span>
+          <button
+            onClick={() => {
+              for (const c of COUPONS) {
+                localStorage.removeItem(`mom-scratched-${c.id}`);
+              }
+              setRevealedIds(new Set());
+            }}
+            className="uppercase tracking-[0.2em] underline-offset-4 hover:underline"
+          >
+            Reset
+          </button>
+        </div>
+      )}
 
       {selected && (
         <Modal
