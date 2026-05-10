@@ -16,8 +16,8 @@ export default function ScratchCard({
   width,
   height,
   storageKey,
-  threshold = 0.45,
-  brushRadius = 32,
+  threshold = 0.5,
+  brushRadius = 18,
   children,
   onRevealed,
 }: Props) {
@@ -61,10 +61,14 @@ export default function ScratchCard({
     }
 
     ctx.fillStyle = "rgba(0,0,0,0.55)";
-    ctx.font = "600 16px var(--font-geist-sans), system-ui";
+    ctx.font = "700 22px var(--font-geist-sans), system-ui";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText("Scratch to reveal", width / 2, height / 2);
+    ctx.fillText("SCRATCH HERE", width / 2, height / 2 - 14);
+
+    ctx.fillStyle = "rgba(0,0,0,0.4)";
+    ctx.font = "500 13px var(--font-geist-sans), system-ui";
+    ctx.fillText("drag your finger across", width / 2, height / 2 + 14);
   }, [width, height, revealed]);
 
   const reveal = () => {
