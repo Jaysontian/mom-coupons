@@ -1,5 +1,5 @@
-import Wheel from "./Wheel";
+import Pond from "./Pond";
 
 export default function Home() {
-  return <Wheel />;
+  return <Pond />;
 }

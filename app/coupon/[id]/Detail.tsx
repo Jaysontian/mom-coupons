@@ -66,10 +66,10 @@ export default function Detail({ coupon }: { coupon: Coupon }) {
 
         {revealed && (
           <div className="mt-10 text-center max-w-sm animate-[fade_700ms_ease]">
-            <h1 className="text-3xl font-semibold tracking-tight">
+            <h1 className="text-2xl font-semibold tracking-tight">
               {coupon.title}
             </h1>
-            <p className="mt-4 text-white/70 leading-relaxed">
+            <p className="mt-4 text-white/70 leading-snug">
               {coupon.detail}
             </p>
           </div>

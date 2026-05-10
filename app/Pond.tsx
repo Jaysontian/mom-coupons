@@ -3,8 +3,8 @@
 import { Water } from "@paper-design/shaders-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { COUPONS, type Coupon } from "../data";
-import ScratchCard from "../ScratchCard";
+import { COUPONS, type Coupon } from "./data";
+import ScratchCard from "./ScratchCard";
 
 const BASE_PATH =
   process.env.NODE_ENV === "production" ? "/mom-coupons" : "";
@@ -397,13 +397,14 @@ function Envelope() {
 function RevealedCard({ coupon }: { coupon: Coupon }) {
   if (coupon.image) {
     return (
-      <div className="w-full h-full overflow-hidden bg-white ring-4 ring-white shadow-2xl relative">
+      <div className="w-full h-full flex items-center justify-center drop-shadow-2xl">
         <Image
           src={coupon.image}
           alt={coupon.title}
-          fill
+          width={ENV_W}
+          height={ENV_H}
           sizes={`${ENV_W}px`}
-          className="object-cover"
+          className="max-w-full max-h-full w-auto h-auto"
         />
       </div>
     );
@@ -507,7 +508,7 @@ function Modal({
           onRevealed={onReveal}
         >
           {coupon.image ? (
-            <div className="w-full h-full overflow-hidden bg-white ring-1 ring-white/20 shadow-2xl relative">
+            <div className="w-full h-full flex items-center justify-center relative drop-shadow-2xl">
               <Image
                 src={coupon.image}
                 alt={coupon.title}
@@ -529,12 +530,17 @@ function Modal({
           )}
         </ScratchCard>
 
-        {revealed && (
+        {revealed && (() => {
+          const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+          const titleRepeatsDetail = norm(coupon.title) === norm(coupon.detail);
+          return (
           <div className="mt-8 text-center max-w-sm animate-[fade_700ms_ease]">
-            <h2 className="text-2xl font-semibold tracking-tight text-white">
-              {coupon.title}
-            </h2>
-            <p className="mt-3 text-white/80 leading-relaxed">{coupon.detail}</p>
+            {!titleRepeatsDetail && (
+              <h2 className="text-2xl font-semibold tracking-tight text-white">
+                {coupon.title}
+              </h2>
+            )}
+            <p className={`${titleRepeatsDetail ? "" : "mt-3"} text-white/80 leading-relaxed`}>{coupon.detail}</p>
             {coupon.link && (
               <a
                 href={coupon.link.href}
@@ -546,7 +552,8 @@ function Modal({
               </a>
             )}
           </div>
-        )}
+          );
+        })()}
 
         <button
           onClick={onClose}
