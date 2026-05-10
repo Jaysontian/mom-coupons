@@ -62,19 +62,7 @@ export default function Wheel() {
 
   return (
     <div className="relative h-dvh w-full overflow-hidden bg-black text-white flex flex-col">
-      <header className="flex items-center justify-between px-6 pt-14 pb-2 z-30">
-        <button className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-white/80">
-          ←
-        </button>
-        <p className="text-sm text-white/60">
-          Memory — {active + 1} of {COUPONS.length}
-        </p>
-        <button className="px-3 h-9 rounded-full bg-white/10 text-white/80 text-sm">
-          Skip
-        </button>
-      </header>
-
-      <section className="px-6 pt-6 pb-4 z-30 relative">
+      <section className="px-6 pt-20 pb-4 z-30 relative">
         <h1
           key={`t-${current.id}`}
           className="text-4xl font-semibold tracking-tight leading-[1.05] animate-[fade_400ms_ease]"
@@ -113,8 +101,8 @@ export default function Wheel() {
           <div style={{ height: "100%" }} />
         </div>
 
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black to-transparent z-10" />
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black to-transparent z-10" />
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black via-black/90 to-transparent z-[200]" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black via-black/90 to-transparent z-[200]" />
       </div>
 
       <div className="px-6 pb-8 pt-4 z-30">
