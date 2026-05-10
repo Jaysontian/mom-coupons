@@ -92,6 +92,17 @@ export default function Pond() {
   const [items, setItems] = useState<Item[]>([]);
   const [selected, setSelected] = useState<Coupon | null>(null);
   const [revealed, setRevealed] = useState(false);
+  const [revealedIds, setRevealedIds] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    const ids = new Set<string>();
+    for (const c of COUPONS) {
+      if (localStorage.getItem(`mom-scratched-${c.id}`) === "1") {
+        ids.add(c.id);
+      }
+    }
+    setRevealedIds(ids);
+  }, []);
 
   useEffect(() => {
     const update = () => {
@@ -272,7 +283,13 @@ export default function Pond() {
             }`}
             style={{ width: it.w, height: it.h }}
           >
-            {it.kind === "envelope" ? <Envelope /> : <Duck />}
+            {it.kind === "duck" ? (
+              <Duck />
+            ) : it.coupon && revealedIds.has(it.coupon.id) ? (
+              <RevealedCard coupon={it.coupon} />
+            ) : (
+              <Envelope />
+            )}
           </div>
         ))}
       </div>
@@ -281,7 +298,15 @@ export default function Pond() {
         <Modal
           coupon={selected}
           revealed={revealed}
-          onReveal={() => setRevealed(true)}
+          onReveal={() => {
+            setRevealed(true);
+            setRevealedIds((prev) => {
+              if (prev.has(selected.id)) return prev;
+              const next = new Set(prev);
+              next.add(selected.id);
+              return next;
+            });
+          }}
           onClose={() => setSelected(null)}
         />
       )}
@@ -325,6 +350,32 @@ function Envelope() {
         </svg>
       </span>
       <span className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-black/5" />
+    </div>
+  );
+}
+
+function RevealedCard({ coupon }: { coupon: Coupon }) {
+  if (coupon.image) {
+    return (
+      <div className="w-full h-full overflow-hidden bg-white ring-1 ring-black/10 shadow-2xl relative">
+        <Image
+          src={coupon.image}
+          alt={coupon.title}
+          fill
+          sizes={`${ENV_W}px`}
+          className="object-cover"
+        />
+      </div>
+    );
+  }
+  return (
+    <div
+      className="w-full h-full flex items-center justify-center px-3 text-center shadow-2xl ring-1 ring-black/10"
+      style={{ backgroundColor: coupon.color, color: "#1a1a1a" }}
+    >
+      <span className="text-[11px] font-semibold leading-tight tracking-tight">
+        {coupon.title}
+      </span>
     </div>
   );
 }
