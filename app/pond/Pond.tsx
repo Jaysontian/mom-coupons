@@ -530,9 +530,9 @@ function Modal({
 
         <button
           onClick={onClose}
-          className="mt-8 text-white/70 text-xs uppercase tracking-[0.2em]"
+          className="mt-8 px-8 py-3 rounded-full bg-white text-black text-sm font-medium tracking-tight active:scale-[0.97] transition"
         >
-          Tap to close
+          Close
         </button>
       </div>
     </div>

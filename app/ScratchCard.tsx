@@ -16,14 +16,15 @@ export default function ScratchCard({
   width,
   height,
   storageKey,
-  threshold = 0.5,
-  brushRadius = 18,
+  threshold = 0.4,
+  brushRadius = 24,
   children,
   onRevealed,
 }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const drawing = useRef(false);
   const lastPoint = useRef<{ x: number; y: number } | null>(null);
+  const moveCount = useRef(0);
   const [revealed, setRevealed] = useState(false);
 
   useEffect(() => {
@@ -139,6 +140,7 @@ export default function ScratchCard({
             if (!drawing.current) return;
             const p = localPoint(e);
             drawAt(p.x, p.y);
+            if (++moveCount.current % 5 === 0) checkRatio();
           }}
           onPointerUp={() => {
             drawing.current = false;
