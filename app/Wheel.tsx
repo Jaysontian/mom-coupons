@@ -87,7 +87,7 @@ export default function Wheel() {
             className="absolute top-0 left-0 will-change-transform pointer-events-none"
             style={{ transformOrigin: "0 50%" }}
           >
-            <Ticket coupon={c} />
+            <Ticket />
           </div>
         ))}
 
@@ -110,27 +110,27 @@ export default function Wheel() {
           href={`/coupon/${current.id}`}
           className="block w-full text-center py-4 rounded-full bg-white text-black font-medium tracking-tight active:scale-[0.98] transition-transform"
         >
-          {current.surprise ? "Reveal Surprise" : "Open Memory"}
+          Scratch to Reveal
         </Link>
       </div>
     </div>
   );
 }
 
-function Ticket({
-  coupon,
-}: {
-  coupon: { title: string; color: string; surprise?: boolean };
-}) {
+function Ticket() {
   return (
     <div
-      className="w-64 h-24 rounded-2xl flex items-center px-5 shadow-2xl -translate-y-1/2"
-      style={{ backgroundColor: coupon.color, color: "#1a1a1a" }}
+      className="w-64 h-24 rounded-2xl flex items-center justify-center px-5 shadow-2xl -translate-y-1/2 overflow-hidden relative"
+      style={{
+        background:
+          "linear-gradient(135deg, #a3a3a3 0%, #e5e5e5 40%, #d4d4d4 60%, #737373 100%)",
+        color: "#1a1a1a",
+      }}
     >
-      <span className="text-lg font-semibold leading-tight tracking-tight">
-        {coupon.surprise ? "?" : coupon.title}
+      <span className="text-sm font-semibold tracking-[0.2em] uppercase opacity-70">
+        Scratch
       </span>
-      <span className="ml-auto w-10 h-10 rounded-full bg-black/10 shrink-0" />
+      <span className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/30 via-transparent to-white/10" />
     </div>
   );
 }

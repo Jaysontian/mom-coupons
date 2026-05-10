@@ -3,9 +3,10 @@
 import Link from "next/link";
 import { useState } from "react";
 import type { Coupon } from "../../data";
+import ScratchCard from "../../ScratchCard";
 
 export default function Detail({ coupon }: { coupon: Coupon }) {
-  const [revealed, setRevealed] = useState(!coupon.surprise);
+  const [revealed, setRevealed] = useState(false);
 
   return (
     <div className="min-h-dvh flex flex-col bg-black text-white">
@@ -18,24 +19,44 @@ export default function Detail({ coupon }: { coupon: Coupon }) {
         </Link>
       </header>
 
-      <main className="flex-1 px-6 pt-8 flex flex-col">
-        <div
-          className="w-full aspect-[3/2] rounded-3xl flex items-center justify-center shadow-2xl"
-          style={{ backgroundColor: coupon.color, color: "#1a1a1a" }}
-          onClick={() => coupon.surprise && setRevealed(true)}
-          role={coupon.surprise && !revealed ? "button" : undefined}
+      <main className="flex-1 px-6 pt-8 flex flex-col items-center">
+        <ScratchCard
+          width={320}
+          height={220}
+          storageKey={`mom-scratched-${coupon.id}`}
+          onRevealed={() => setRevealed(true)}
         >
-          <span className="text-3xl font-semibold tracking-tight">
-            {revealed ? coupon.title : "Tap to reveal"}
-          </span>
-        </div>
+          <div
+            className="w-full h-full rounded-3xl flex items-center justify-center px-6 text-center shadow-2xl"
+            style={{ backgroundColor: coupon.color, color: "#1a1a1a" }}
+          >
+            <span className="text-2xl font-semibold tracking-tight leading-tight">
+              {coupon.title}
+            </span>
+          </div>
+        </ScratchCard>
 
-        <h1 className="mt-10 text-3xl font-semibold tracking-tight">
-          {revealed ? coupon.title : "A surprise for you"}
-        </h1>
-        <p className="mt-4 text-white/70 leading-relaxed">
-          {revealed ? coupon.detail : "Tap the card above when you're ready."}
-        </p>
+        <div className="mt-10 text-center max-w-sm">
+          <h1
+            className={`text-3xl font-semibold tracking-tight transition-opacity duration-700 ${
+              revealed ? "opacity-100" : "opacity-30"
+            }`}
+          >
+            {revealed ? coupon.title : "Not yet…"}
+          </h1>
+          <p
+            className={`mt-4 text-white/70 leading-relaxed transition-opacity duration-700 ${
+              revealed ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            {coupon.detail}
+          </p>
+          {!revealed && (
+            <p className="mt-4 text-white/40 text-sm">
+              Drag your finger across the card to scratch it off.
+            </p>
+          )}
+        </div>
       </main>
 
       <div className="px-6 pb-8 pt-4">
