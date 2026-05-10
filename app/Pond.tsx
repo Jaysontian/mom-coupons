@@ -6,8 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { COUPONS, type Coupon } from "./data";
 import ScratchCard from "./ScratchCard";
 
-const BASE_PATH =
-  process.env.NODE_ENV === "production" ? "/mom-coupons" : "";
+const BASE_PATH = "";
 
 const ENV_W = 128;
 const ENV_H = 80;
