@@ -148,17 +148,31 @@ function Ticket({ coupon }: { coupon: Coupon }) {
 
   return (
     <div
-      className="w-64 h-24 ring-1 ring-white/15 flex items-center justify-center px-5 shadow-2xl -translate-y-1/2 overflow-hidden relative"
-      style={{
-        background:
-          "linear-gradient(135deg, #a3a3a3 0%, #e5e5e5 40%, #d4d4d4 60%, #737373 100%)",
-        color: "#1a1a1a",
-      }}
+      className="w-64 h-24 ring-1 ring-black/10 shadow-2xl -translate-y-1/2 overflow-hidden relative"
+      style={{ background: "#f5ecd9" }}
     >
-      <span className="text-sm font-semibold tracking-[0.2em] uppercase opacity-70">
-        Scratch
+      <svg
+        className="absolute inset-0 w-full h-full"
+        viewBox="0 0 256 96"
+        preserveAspectRatio="none"
+      >
+        <path
+          d="M0 0 L128 48 L256 0"
+          stroke="rgba(0,0,0,0.18)"
+          strokeWidth="0.8"
+          fill="none"
+        />
+        <path
+          d="M0 96 L128 48 L256 96"
+          stroke="rgba(0,0,0,0.18)"
+          strokeWidth="0.8"
+          fill="none"
+        />
+      </svg>
+      <span className="absolute inset-0 flex items-center justify-center text-red-600 text-3xl drop-shadow">
+        ♥
       </span>
-      <span className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/30 via-transparent to-white/10" />
+      <span className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-black/5" />
     </div>
   );
 }

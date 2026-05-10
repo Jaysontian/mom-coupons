@@ -2,7 +2,6 @@
 
 import { Water } from "@paper-design/shaders-react";
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { COUPONS, type Coupon } from "../data";
 import ScratchCard from "../ScratchCard";
@@ -119,13 +118,6 @@ export default function Pond() {
         })}
       </div>
 
-      <Link
-        href="/"
-        className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 text-white/80 text-xs uppercase tracking-[0.2em] px-4 py-2 rounded-full bg-white/10 backdrop-blur-md ring-1 ring-white/20"
-      >
-        Back to wheel
-      </Link>
-
       {selected && (
         <Modal
           coupon={selected}
@@ -141,18 +133,34 @@ export default function Pond() {
 function FoilTicket() {
   return (
     <div
-      className="w-32 h-20 flex items-center justify-center shadow-2xl ring-1 ring-white/30 overflow-hidden relative"
+      className="w-32 h-20 shadow-2xl ring-1 ring-black/10 overflow-hidden relative"
       style={{
-        background:
-          "linear-gradient(135deg, #a3a3a3 0%, #e5e5e5 40%, #d4d4d4 60%, #737373 100%)",
-        color: "#1a1a1a",
+        background: "#f5ecd9",
         transform: "rotate(var(--rot, 0deg))",
       }}
     >
-      <span className="text-[10px] font-semibold tracking-[0.2em] uppercase opacity-70">
-        Scratch
+      <svg
+        className="absolute inset-0 w-full h-full"
+        viewBox="0 0 128 80"
+        preserveAspectRatio="none"
+      >
+        <path
+          d="M0 0 L64 40 L128 0"
+          stroke="rgba(0,0,0,0.18)"
+          strokeWidth="0.6"
+          fill="none"
+        />
+        <path
+          d="M0 80 L64 40 L128 80"
+          stroke="rgba(0,0,0,0.18)"
+          strokeWidth="0.6"
+          fill="none"
+        />
+      </svg>
+      <span className="absolute inset-0 flex items-center justify-center text-red-600 text-2xl drop-shadow">
+        ♥
       </span>
-      <span className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/30 via-transparent to-white/10" />
+      <span className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-black/5" />
     </div>
   );
 }

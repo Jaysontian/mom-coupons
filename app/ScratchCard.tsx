@@ -43,32 +43,25 @@ export default function ScratchCard({
     if (!ctx) return;
     ctx.scale(dpr, dpr);
 
-    const grad = ctx.createLinearGradient(0, 0, width, height);
-    grad.addColorStop(0, "#a3a3a3");
-    grad.addColorStop(0.4, "#e5e5e5");
-    grad.addColorStop(0.6, "#d4d4d4");
-    grad.addColorStop(1, "#737373");
-    ctx.fillStyle = grad;
+    ctx.fillStyle = "#f5ecd9";
     ctx.fillRect(0, 0, width, height);
 
-    ctx.fillStyle = "rgba(255,255,255,0.18)";
-    for (let i = 0; i < 60; i++) {
-      const x = Math.random() * width;
-      const y = Math.random() * height;
-      ctx.beginPath();
-      ctx.arc(x, y, Math.random() * 1.5, 0, Math.PI * 2);
-      ctx.fill();
-    }
+    ctx.strokeStyle = "rgba(0,0,0,0.18)";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(width / 2, height / 2);
+    ctx.lineTo(width, 0);
+    ctx.moveTo(0, height);
+    ctx.lineTo(width / 2, height / 2);
+    ctx.lineTo(width, height);
+    ctx.stroke();
 
-    ctx.fillStyle = "rgba(0,0,0,0.55)";
-    ctx.font = "700 22px var(--font-geist-sans), system-ui";
+    ctx.fillStyle = "#dc2626";
+    ctx.font = "700 64px var(--font-geist-sans), system-ui";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText("SCRATCH HERE", width / 2, height / 2 - 14);
-
-    ctx.fillStyle = "rgba(0,0,0,0.4)";
-    ctx.font = "500 13px var(--font-geist-sans), system-ui";
-    ctx.fillText("drag your finger across", width / 2, height / 2 + 14);
+    ctx.fillText("♥", width / 2, height / 2);
   }, [width, height, revealed]);
 
   const reveal = () => {
