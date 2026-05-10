@@ -309,14 +309,14 @@ export default function Pond() {
         ))}
       </div>
 
-      <div className="absolute bottom-5 left-5 z-30 text-[11px] text-white/85 drop-shadow tracking-wide">
+      <div className="absolute bottom-5 left-5 z-30 text-sm text-white/90 drop-shadow tracking-wide font-medium">
         May 10, 2026
       </div>
 
       {!entered ? (
         <button
           onClick={() => setEntered(true)}
-          className="absolute bottom-4 right-5 z-30 px-5 py-2.5 rounded-full bg-white/20 backdrop-blur-md ring-1 ring-white/40 text-white text-xs tracking-[0.2em] uppercase hover:bg-white/30 transition"
+          className="absolute bottom-4 right-5 z-30 px-5 py-2.5 rounded-full bg-white/20 backdrop-blur-md ring-1 ring-white/40 text-white text-sm font-medium hover:bg-white/30 transition"
         >
           Unlock Gift
         </button>
