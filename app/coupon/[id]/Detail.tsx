@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import type { Coupon } from "../../data";
@@ -40,14 +41,27 @@ export default function Detail({ coupon }: { coupon: Coupon }) {
           storageKey={`mom-scratched-${coupon.id}`}
           onRevealed={() => setRevealed(true)}
         >
-          <div
-            className="w-full h-full rounded-3xl flex items-center justify-center px-6 text-center shadow-2xl"
-            style={{ backgroundColor: coupon.color, color: "#1a1a1a" }}
-          >
-            <span className="text-2xl font-semibold tracking-tight leading-tight">
-              {coupon.title}
-            </span>
-          </div>
+          {coupon.image ? (
+            <div className="w-full h-full rounded-3xl overflow-hidden shadow-2xl relative bg-white">
+              <Image
+                src={coupon.image}
+                alt={coupon.title}
+                fill
+                sizes="320px"
+                className="object-contain"
+                priority
+              />
+            </div>
+          ) : (
+            <div
+              className="w-full h-full rounded-3xl flex items-center justify-center px-6 text-center shadow-2xl"
+              style={{ backgroundColor: coupon.color, color: "#1a1a1a" }}
+            >
+              <span className="text-2xl font-semibold tracking-tight leading-tight">
+                {coupon.title}
+              </span>
+            </div>
+          )}
         </ScratchCard>
 
         {revealed && (

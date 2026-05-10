@@ -4,17 +4,19 @@ export type Coupon = {
   description: string;
   detail: string;
   color: string;
+  image?: string;
   surprise?: boolean;
 };
 
 export const COUPONS: Coupon[] = [
   {
-    id: "breakfast",
-    title: "Breakfast in Bed",
-    description: "A slow morning, served on your favorite plate.",
+    id: "afternoon-tea",
+    title: "Mother's Day Afternoon Tea",
+    description: "CLOCKWORK at the Fairmont — May 23, 2026.",
     detail:
-      "Pancakes, fresh fruit, a pot of coffee — and the newspaper if you still read it that way.",
-    color: "#F4C7B8",
+      "Mother's Day Afternoon Tea — Prelude. CLOCKWORK, 100 Front St W, Toronto. May 23, 2026 at 12:00 p.m. Two people. Fairmont's curated tea selection, seasonal savouries and sweets, live music, and the lobby's floral installation to wander before or after.",
+    color: "#E8D7C3",
+    image: "/afternoon_tea.png",
   },
   {
     id: "drive",

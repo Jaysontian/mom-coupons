@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { COUPONS } from "./data";
+import { COUPONS, type Coupon } from "./data";
 
 const SPACING_DEG = 18;
 const RADIUS = 380;
@@ -81,7 +82,7 @@ export default function Wheel() {
             className="absolute top-0 left-0 will-change-transform pointer-events-none"
             style={{ transformOrigin: "0 50%" }}
           >
-            <Ticket />
+            <Ticket coupon={c} />
           </div>
         ))}
 
@@ -111,7 +112,40 @@ export default function Wheel() {
   );
 }
 
-function Ticket() {
+function Ticket({ coupon }: { coupon: Coupon }) {
+  const [revealed, setRevealed] = useState(false);
+
+  useEffect(() => {
+    setRevealed(localStorage.getItem(`mom-scratched-${coupon.id}`) === "1");
+  }, [coupon.id]);
+
+  if (revealed && coupon.image) {
+    return (
+      <div className="w-64 h-24 rounded-2xl shadow-2xl -translate-y-1/2 overflow-hidden relative">
+        <Image
+          src={coupon.image}
+          alt={coupon.title}
+          fill
+          sizes="256px"
+          className="object-cover"
+        />
+      </div>
+    );
+  }
+
+  if (revealed) {
+    return (
+      <div
+        className="w-64 h-24 rounded-2xl flex items-center px-5 shadow-2xl -translate-y-1/2"
+        style={{ backgroundColor: coupon.color, color: "#1a1a1a" }}
+      >
+        <span className="text-base font-semibold leading-tight tracking-tight">
+          {coupon.title}
+        </span>
+      </div>
+    );
+  }
+
   return (
     <div
       className="w-64 h-24 rounded-2xl flex items-center justify-center px-5 shadow-2xl -translate-y-1/2 overflow-hidden relative"
