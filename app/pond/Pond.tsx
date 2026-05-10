@@ -15,7 +15,7 @@ const DUCK_SIZE = 64;
 
 type Item = {
   id: string;
-  kind: "envelope" | "duck";
+  kind: "envelope" | "duck" | "note";
   coupon?: Coupon;
   w: number;
   h: number;
@@ -58,6 +58,19 @@ function buildItems(width: number, height: number): Item[] {
     vy: rand(-0.14, 0.14),
     angle: rand(-10, 10),
     vAngle: rand(-0.04, 0.04),
+    el: null,
+  });
+  items.unshift({
+    id: "note",
+    kind: "note",
+    w: 144,
+    h: 100,
+    x: 0,
+    y: 0,
+    vx: rand(-0.12, 0.12),
+    vy: rand(-0.12, 0.12),
+    angle: rand(-6, 6),
+    vAngle: rand(-0.03, 0.03),
     el: null,
   });
 
@@ -246,15 +259,6 @@ export default function Pond() {
 
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/40" />
 
-      <header className="absolute top-0 inset-x-0 z-20 px-6 pt-14 text-center pointer-events-none">
-        <h1 className="text-3xl font-semibold tracking-tight text-white drop-shadow-lg">
-          Happy Mother&apos;s Day
-        </h1>
-        <p className="mt-1 text-sm text-white/80 drop-shadow">
-          Tap a coupon to fish it out
-        </p>
-      </header>
-
       <div className="absolute inset-0 z-10">
         {items.map((it) => (
           <div
@@ -279,12 +283,16 @@ export default function Pond() {
                 : undefined
             }
             className={`absolute top-0 left-0 will-change-transform ${
-              it.kind === "envelope" ? "cursor-pointer" : "pointer-events-none"
+              it.kind === "envelope"
+                ? "cursor-pointer"
+                : "pointer-events-none"
             }`}
             style={{ width: it.w, height: it.h }}
           >
             {it.kind === "duck" ? (
               <Duck />
+            ) : it.kind === "note" ? (
+              <Note />
             ) : it.coupon && revealedIds.has(it.coupon.id) ? (
               <RevealedCard coupon={it.coupon} />
             ) : (
@@ -376,6 +384,42 @@ function RevealedCard({ coupon }: { coupon: Coupon }) {
       <span className="text-[11px] font-semibold leading-tight tracking-tight">
         {coupon.title}
       </span>
+    </div>
+  );
+}
+
+function Note() {
+  return (
+    <div
+      className="w-full h-full ring-1 ring-black/10 shadow-2xl relative flex flex-col items-center justify-center px-3"
+      style={{ background: "#fefcf3", color: "#2a2418" }}
+    >
+      <span
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage:
+            "repeating-linear-gradient(0deg, transparent 0 16px, rgba(0,0,0,0.04) 16px 17px)",
+        }}
+      />
+      <div className="text-[9px] uppercase tracking-[0.25em] opacity-50">
+        From
+      </div>
+      <div
+        className="text-lg leading-none italic"
+        style={{ fontFamily: "ui-serif, Georgia, serif" }}
+      >
+        Jayson
+      </div>
+      <div className="my-1 w-8 h-px bg-black/15" />
+      <div className="text-[9px] uppercase tracking-[0.25em] opacity-50">
+        To
+      </div>
+      <div
+        className="text-lg leading-none italic"
+        style={{ fontFamily: "ui-serif, Georgia, serif" }}
+      >
+        Mom
+      </div>
     </div>
   );
 }
