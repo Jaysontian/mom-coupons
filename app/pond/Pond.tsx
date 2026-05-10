@@ -309,35 +309,29 @@ export default function Pond() {
         ))}
       </div>
 
-      {!entered && (
-        <div className="absolute inset-0 z-30 flex items-center justify-center flex-col text-white animate-[fade_500ms_ease]">
-          <div className="text-2xl font-medium tracking-wide drop-shadow-lg">
-            May 10, 2026
-          </div>
-          <button
-            onClick={() => setEntered(true)}
-            className="mt-8 px-6 py-3 rounded-full bg-white/20 backdrop-blur-md ring-1 ring-white/40 text-white text-sm tracking-[0.2em] uppercase hover:bg-white/30 transition"
-          >
-            Unlock Gift
-          </button>
-        </div>
-      )}
+      <div className="absolute bottom-5 left-5 z-30 text-[11px] text-white/85 drop-shadow tracking-wide">
+        May 10, 2026
+      </div>
 
-      {entered && (
-        <div className="absolute bottom-5 right-5 z-30 flex items-center gap-3 text-[11px] text-white/80 drop-shadow animate-[fade_700ms_ease]">
-          <span>May 10, 2026</span>
-          <button
-            onClick={() => {
-              for (const c of COUPONS) {
-                localStorage.removeItem(`mom-scratched-${c.id}`);
-              }
-              setRevealedIds(new Set());
-            }}
-            className="uppercase tracking-[0.2em] underline-offset-4 hover:underline"
-          >
-            Reset
-          </button>
-        </div>
+      {!entered ? (
+        <button
+          onClick={() => setEntered(true)}
+          className="absolute bottom-4 right-5 z-30 px-5 py-2.5 rounded-full bg-white/20 backdrop-blur-md ring-1 ring-white/40 text-white text-xs tracking-[0.2em] uppercase hover:bg-white/30 transition"
+        >
+          Unlock Gift
+        </button>
+      ) : (
+        <button
+          onClick={() => {
+            for (const c of COUPONS) {
+              localStorage.removeItem(`mom-scratched-${c.id}`);
+            }
+            setRevealedIds(new Set());
+          }}
+          className="absolute bottom-5 right-5 z-30 text-[11px] text-white/85 drop-shadow uppercase tracking-[0.2em] underline-offset-4 hover:underline animate-[fade_700ms_ease]"
+        >
+          Reset
+        </button>
       )}
 
       {selected && (
