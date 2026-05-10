@@ -4,40 +4,45 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { COUPONS } from "./data";
 
+const SPACING_DEG = 26;
+const RADIUS = 380;
+const AXIS_X = -300;
+const TICK = 220;
+
 export default function Wheel() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const wheelRef = useRef<HTMLDivElement>(null);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [active, setActive] = useState(0);
 
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
+    const scroller = scrollRef.current;
+    const wheel = wheelRef.current;
+    if (!scroller || !wheel) return;
 
     let raf = 0;
     const update = () => {
-      const center = container.scrollTop + container.clientHeight / 2;
-      let bestIdx = 0;
-      let bestDist = Infinity;
+      const idx = scroller.scrollTop / TICK;
+      const cy = wheel.clientHeight / 2;
 
-      itemRefs.current.forEach((el, i) => {
+      cardRefs.current.forEach((el, i) => {
         if (!el) return;
-        const itemCenter = el.offsetTop + el.offsetHeight / 2;
-        const delta = itemCenter - center;
-        const absDelta = Math.abs(delta);
+        const offset = i - idx;
+        const angle = offset * SPACING_DEG;
+        const rad = (angle * Math.PI) / 180;
+        const x = AXIS_X + RADIUS * Math.cos(rad);
+        const y = cy + RADIUS * Math.sin(rad);
 
-        const angle = Math.max(-80, Math.min(80, delta * 0.6));
-        const opacity = Math.max(0, 1 - absDelta / 280);
+        const abs = Math.abs(angle);
+        const visible = abs < 70;
+        const opacity = visible ? Math.max(0, 1 - abs / 80) : 0;
 
-        el.style.transform = `rotateX(${angle}deg) translateZ(${-absDelta * 0.4}px)`;
+        el.style.transform = `translate(${x}px, ${y}px) rotate(${angle}deg)`;
         el.style.opacity = `${opacity}`;
-
-        if (absDelta < bestDist) {
-          bestDist = absDelta;
-          bestIdx = i;
-        }
+        el.style.zIndex = `${100 - Math.round(abs)}`;
       });
 
-      setActive(bestIdx);
+      setActive(Math.max(0, Math.min(COUPONS.length - 1, Math.round(idx))));
     };
 
     const onScroll = () => {
@@ -45,10 +50,10 @@ export default function Wheel() {
       raf = requestAnimationFrame(update);
     };
 
-    container.addEventListener("scroll", onScroll, { passive: true });
+    scroller.addEventListener("scroll", onScroll, { passive: true });
     update();
     return () => {
-      container.removeEventListener("scroll", onScroll);
+      scroller.removeEventListener("scroll", onScroll);
       cancelAnimationFrame(raf);
     };
   }, []);
@@ -57,7 +62,7 @@ export default function Wheel() {
 
   return (
     <div className="relative h-dvh w-full overflow-hidden bg-black text-white flex flex-col">
-      <header className="flex items-center justify-between px-6 pt-14 pb-2 z-20">
+      <header className="flex items-center justify-between px-6 pt-14 pb-2 z-30">
         <button className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-white/80">
           ←
         </button>
@@ -69,7 +74,7 @@ export default function Wheel() {
         </button>
       </header>
 
-      <section className="px-6 pt-6 pb-4 z-20 relative">
+      <section className="px-6 pt-6 pb-4 z-30 relative">
         <h1
           key={`t-${current.id}`}
           className="text-4xl font-semibold tracking-tight leading-[1.05] animate-[fade_400ms_ease]"
@@ -84,33 +89,34 @@ export default function Wheel() {
         </p>
       </section>
 
-      <div className="relative flex-1 min-h-0" style={{ perspective: "1100px" }}>
+      <div ref={wheelRef} className="relative flex-1 min-h-0 overflow-hidden isolate">
+        {COUPONS.map((c, i) => (
+          <div
+            key={c.id}
+            ref={(el) => {
+              cardRefs.current[i] = el;
+            }}
+            className="absolute top-0 left-0 will-change-transform"
+            style={{ transformOrigin: "0 50%" }}
+          >
+            <Ticket coupon={c} />
+          </div>
+        ))}
+
         <div
-          ref={containerRef}
-          className="absolute inset-0 overflow-y-scroll snap-y snap-mandatory no-scrollbar"
-          style={{ transformStyle: "preserve-3d" }}
+          ref={scrollRef}
+          className="absolute inset-0 overflow-y-scroll snap-y snap-mandatory no-scrollbar z-20"
         >
-          <div className="h-[40%]" />
           {COUPONS.map((c, i) => (
-            <div
-              key={c.id}
-              ref={(el) => {
-                itemRefs.current[i] = el;
-              }}
-              className="snap-center h-32 flex items-center justify-center px-10 will-change-transform"
-              style={{ transformOrigin: "center center" }}
-            >
-              <Ticket coupon={c} />
-            </div>
+            <div key={c.id} className="snap-start" style={{ height: TICK }} />
           ))}
-          <div className="h-[55%]" />
         </div>
 
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-black via-black/85 to-transparent" />
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black to-transparent" />
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black to-transparent z-10" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black to-transparent z-10" />
       </div>
 
-      <div className="px-6 pb-8 pt-4 z-20">
+      <div className="px-6 pb-8 pt-4 z-30">
         <Link
           href={`/coupon/${current.id}`}
           className="block w-full text-center py-4 rounded-full bg-white text-black font-medium tracking-tight active:scale-[0.98] transition-transform"
@@ -122,16 +128,20 @@ export default function Wheel() {
   );
 }
 
-function Ticket({ coupon }: { coupon: { title: string; color: string; surprise?: boolean } }) {
+function Ticket({
+  coupon,
+}: {
+  coupon: { title: string; color: string; surprise?: boolean };
+}) {
   return (
     <div
-      className="relative w-full max-w-xs h-24 rounded-2xl flex items-center px-5 shadow-2xl"
+      className="w-64 h-24 rounded-2xl flex items-center px-5 shadow-2xl -translate-y-1/2"
       style={{ backgroundColor: coupon.color, color: "#1a1a1a" }}
     >
-      <span className="text-xl font-semibold leading-tight tracking-tight">
+      <span className="text-lg font-semibold leading-tight tracking-tight">
         {coupon.surprise ? "?" : coupon.title}
       </span>
-      <span className="ml-auto w-12 h-12 rounded-full bg-black/10" />
+      <span className="ml-auto w-10 h-10 rounded-full bg-black/10 shrink-0" />
     </div>
   );
 }
