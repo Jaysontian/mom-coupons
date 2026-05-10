@@ -10,16 +10,30 @@ export default function Detail({ coupon }: { coupon: Coupon }) {
 
   return (
     <div className="min-h-dvh flex flex-col bg-black text-white">
-      <header className="flex items-center px-6 pt-14 pb-2">
-        <Link
-          href="/"
-          className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-white/80"
-        >
-          ←
-        </Link>
-      </header>
+      {revealed && (
+        <header className="px-4 pt-14 pb-2">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1 text-white/80 -ml-1 px-2 py-1"
+          >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
+            <span className="text-base">Back to Coupons</span>
+          </Link>
+        </header>
+      )}
 
-      <main className="flex-1 px-6 pt-8 flex flex-col items-center">
+      <main className="flex-1 flex flex-col items-center justify-center px-6">
         <ScratchCard
           width={320}
           height={220}
@@ -36,37 +50,17 @@ export default function Detail({ coupon }: { coupon: Coupon }) {
           </div>
         </ScratchCard>
 
-        <div className="mt-10 text-center max-w-sm">
-          <h1
-            className={`text-3xl font-semibold tracking-tight transition-opacity duration-700 ${
-              revealed ? "opacity-100" : "opacity-30"
-            }`}
-          >
-            {revealed ? coupon.title : "Not yet…"}
-          </h1>
-          <p
-            className={`mt-4 text-white/70 leading-relaxed transition-opacity duration-700 ${
-              revealed ? "opacity-100" : "opacity-0"
-            }`}
-          >
-            {coupon.detail}
-          </p>
-          {!revealed && (
-            <p className="mt-4 text-white/40 text-sm">
-              Drag your finger across the card to scratch it off.
+        {revealed && (
+          <div className="mt-10 text-center max-w-sm animate-[fade_700ms_ease]">
+            <h1 className="text-3xl font-semibold tracking-tight">
+              {coupon.title}
+            </h1>
+            <p className="mt-4 text-white/70 leading-relaxed">
+              {coupon.detail}
             </p>
-          )}
-        </div>
+          </div>
+        )}
       </main>
-
-      <div className="px-6 pb-8 pt-4">
-        <Link
-          href="/"
-          className="block w-full text-center py-4 rounded-full bg-white text-black font-medium tracking-tight"
-        >
-          Back to coupons
-        </Link>
-      </div>
     </div>
   );
 }

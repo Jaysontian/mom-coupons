@@ -62,18 +62,12 @@ export default function Wheel() {
 
   return (
     <div className="relative h-dvh w-full overflow-hidden bg-black text-white flex flex-col">
-      <section className="px-6 pt-14 pb-2 z-30 relative">
-        <h1
-          key={`t-${current.id}`}
-          className="text-4xl font-semibold tracking-tight leading-[1.05] animate-[fade_400ms_ease]"
-        >
-          {current.title}
+      <section className="px-6 pt-14 pb-2 z-30 relative text-center">
+        <h1 className="text-4xl font-semibold tracking-tight leading-[1.05]">
+          Happy Mother&apos;s Day!
         </h1>
-        <p
-          key={`d-${current.id}`}
-          className="mt-3 text-white/60 leading-relaxed max-w-sm animate-[fade_500ms_ease]"
-        >
-          {current.description}
+        <p className="mt-3 text-white/60 leading-relaxed">
+          From yours truly, Jayson
         </p>
       </section>
 
