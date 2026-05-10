@@ -433,21 +433,33 @@ function Note() {
             "repeating-linear-gradient(0deg, transparent 0 16px, rgba(0,0,0,0.04) 16px 17px)",
         }}
       />
-      <div
-        className="text-base italic leading-tight"
-      >
-        <span className="text-[10px] uppercase tracking-[0.2em] not-italic opacity-60 mr-1.5">
+      <div className="text-lg leading-tight">
+        <span
+          className="text-[10px] uppercase tracking-[0.2em] opacity-60 mr-1.5"
+          style={{ fontFamily: "var(--font-figtree), sans-serif" }}
+        >
           From
         </span>
-        Jayson
+        <span
+          className="italic"
+          style={{ fontFamily: '"Times New Roman", ui-serif, Georgia, serif' }}
+        >
+          Jayson
+        </span>
       </div>
-      <div
-        className="mt-1.5 text-base italic leading-tight"
-      >
-        <span className="text-[10px] uppercase tracking-[0.2em] not-italic opacity-60 mr-1.5">
+      <div className="mt-1.5 text-lg leading-tight">
+        <span
+          className="text-[10px] uppercase tracking-[0.2em] opacity-60 mr-1.5"
+          style={{ fontFamily: "var(--font-figtree), sans-serif" }}
+        >
           To
         </span>
-        Mom
+        <span
+          className="italic"
+          style={{ fontFamily: '"Times New Roman", ui-serif, Georgia, serif' }}
+        >
+          Mom
+        </span>
       </div>
     </div>
   );
