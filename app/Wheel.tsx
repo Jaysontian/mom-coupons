@@ -107,9 +107,10 @@ export default function Wheel() {
           ref={scrollRef}
           className="absolute inset-0 overflow-y-scroll snap-y snap-mandatory no-scrollbar z-20"
         >
-          {COUPONS.map((c, i) => (
+          {COUPONS.map((c) => (
             <div key={c.id} className="snap-start" style={{ height: TICK }} />
           ))}
+          <div style={{ height: "100%" }} />
         </div>
 
         <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black to-transparent z-10" />
