@@ -96,7 +96,7 @@ export default function Wheel() {
             ref={(el) => {
               cardRefs.current[i] = el;
             }}
-            className="absolute top-0 left-0 will-change-transform"
+            className="absolute top-0 left-0 will-change-transform pointer-events-none"
             style={{ transformOrigin: "0 50%" }}
           >
             <Ticket coupon={c} />
