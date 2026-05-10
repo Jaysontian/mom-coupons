@@ -19,6 +19,15 @@ export const COUPONS: Coupon[] = [
     image: "/afternoon_tea.png",
   },
   {
+    id: "us",
+    title: "A Photo of Us",
+    description: "From the day we wandered the city together.",
+    detail:
+      "A favorite frame from our walk. I'll print this one and frame it for your shelf — let me know which size you want.",
+    color: "#000000",
+    image: "/mom_and_i.webp",
+  },
+  {
     id: "drive",
     title: "A Long Drive",
     description: "Wherever you want to go. I'll handle the playlist.",

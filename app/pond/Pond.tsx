@@ -61,7 +61,7 @@ export default function Pond() {
         <Water
           width={size.w}
           height={size.h}
-          image={`${BASE_PATH}/mom_and_i.webp`}
+          image={`${BASE_PATH}/pool_floor.png`}
           colorBack="#000000"
           colorHighlight="#ffffff"
           highlights={0.07}
