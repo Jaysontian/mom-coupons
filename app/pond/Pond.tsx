@@ -62,14 +62,14 @@ export default function Pond() {
           width={size.w}
           height={size.h}
           image={`${BASE_PATH}/pool_floor.png`}
-          colorBack="#000000"
+          colorBack="#ffffff"
           colorHighlight="#ffffff"
-          highlights={0.07}
+          highlights={1.0}
           layering={0.5}
           edges={0.8}
           waves={0.3}
           caustic={0.1}
-          size={1}
+          size={0.6}
           speed={0.7}
           scale={0.9}
           fit="cover"
