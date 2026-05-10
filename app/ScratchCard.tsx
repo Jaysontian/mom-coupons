@@ -129,7 +129,7 @@ export default function ScratchCard({
             touchAction: "none",
             borderRadius: "inherit",
           }}
-          className="absolute inset-0 cursor-grab active:cursor-grabbing rounded-3xl"
+          className="absolute inset-0 cursor-grab active:cursor-grabbing"
           onPointerDown={(e) => {
             (e.target as Element).setPointerCapture(e.pointerId);
             drawing.current = true;

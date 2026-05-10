@@ -121,7 +121,7 @@ function Ticket({ coupon }: { coupon: Coupon }) {
 
   if (revealed && coupon.image) {
     return (
-      <div className="w-64 h-24 rounded-2xl ring-1 ring-white/15 shadow-2xl -translate-y-1/2 overflow-hidden relative">
+      <div className="w-64 h-24 ring-1 ring-white/15 shadow-2xl -translate-y-1/2 overflow-hidden relative">
         <Image
           src={coupon.image}
           alt={coupon.title}
@@ -136,7 +136,7 @@ function Ticket({ coupon }: { coupon: Coupon }) {
   if (revealed) {
     return (
       <div
-        className="w-64 h-24 rounded-2xl ring-1 ring-white/15 flex items-center px-5 shadow-2xl -translate-y-1/2"
+        className="w-64 h-24 ring-1 ring-white/15 flex items-center px-5 shadow-2xl -translate-y-1/2"
         style={{ backgroundColor: coupon.color, color: "#1a1a1a" }}
       >
         <span className="text-base font-semibold leading-tight tracking-tight">
@@ -148,7 +148,7 @@ function Ticket({ coupon }: { coupon: Coupon }) {
 
   return (
     <div
-      className="w-64 h-24 rounded-2xl ring-1 ring-white/15 flex items-center justify-center px-5 shadow-2xl -translate-y-1/2 overflow-hidden relative"
+      className="w-64 h-24 ring-1 ring-white/15 flex items-center justify-center px-5 shadow-2xl -translate-y-1/2 overflow-hidden relative"
       style={{
         background:
           "linear-gradient(135deg, #a3a3a3 0%, #e5e5e5 40%, #d4d4d4 60%, #737373 100%)",

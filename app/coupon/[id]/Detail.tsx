@@ -42,7 +42,7 @@ export default function Detail({ coupon }: { coupon: Coupon }) {
           onRevealed={() => setRevealed(true)}
         >
           {coupon.image ? (
-            <div className="w-full h-full rounded-3xl overflow-hidden shadow-2xl relative bg-white ring-1 ring-white/15">
+            <div className="w-full h-full overflow-hidden shadow-2xl relative bg-white ring-1 ring-white/15">
               <Image
                 src={coupon.image}
                 alt={coupon.title}
@@ -54,7 +54,7 @@ export default function Detail({ coupon }: { coupon: Coupon }) {
             </div>
           ) : (
             <div
-              className="w-full h-full rounded-3xl flex items-center justify-center px-6 text-center shadow-2xl ring-1 ring-white/15"
+              className="w-full h-full flex items-center justify-center px-6 text-center shadow-2xl ring-1 ring-white/15"
               style={{ backgroundColor: coupon.color, color: "#1a1a1a" }}
             >
               <span className="text-2xl font-semibold tracking-tight leading-tight">

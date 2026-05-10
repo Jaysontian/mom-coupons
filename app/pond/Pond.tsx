@@ -141,7 +141,7 @@ export default function Pond() {
 function FoilTicket() {
   return (
     <div
-      className="w-32 h-20 rounded-2xl flex items-center justify-center shadow-2xl ring-1 ring-white/30 overflow-hidden relative"
+      className="w-32 h-20 flex items-center justify-center shadow-2xl ring-1 ring-white/30 overflow-hidden relative"
       style={{
         background:
           "linear-gradient(135deg, #a3a3a3 0%, #e5e5e5 40%, #d4d4d4 60%, #737373 100%)",
@@ -184,7 +184,7 @@ function Modal({
           onRevealed={onReveal}
         >
           {coupon.image ? (
-            <div className="w-full h-full rounded-3xl overflow-hidden bg-white ring-1 ring-white/20 shadow-2xl relative">
+            <div className="w-full h-full overflow-hidden bg-white ring-1 ring-white/20 shadow-2xl relative">
               <Image
                 src={coupon.image}
                 alt={coupon.title}
@@ -196,7 +196,7 @@ function Modal({
             </div>
           ) : (
             <div
-              className="w-full h-full rounded-3xl flex items-center justify-center px-6 text-center shadow-2xl ring-1 ring-white/20"
+              className="w-full h-full flex items-center justify-center px-6 text-center shadow-2xl ring-1 ring-white/20"
               style={{ backgroundColor: coupon.color, color: "#1a1a1a" }}
             >
               <span className="text-2xl font-semibold tracking-tight leading-tight">
