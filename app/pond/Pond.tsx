@@ -11,7 +11,7 @@ const BASE_PATH =
 
 const ENV_W = 128;
 const ENV_H = 80;
-const DUCK_SIZE = 96;
+const DUCK_SIZE = 64;
 
 type Item = {
   id: string;
@@ -41,10 +41,10 @@ function buildItems(width: number, height: number): Item[] {
     h: ENV_H,
     x: 0,
     y: 0,
-    vx: rand(-0.4, 0.4),
-    vy: rand(-0.4, 0.4),
+    vx: rand(-0.18, 0.18),
+    vy: rand(-0.18, 0.18),
     angle: rand(-12, 12),
-    vAngle: rand(-0.15, 0.15),
+    vAngle: rand(-0.06, 0.06),
     el: null,
   }));
   items.push({
@@ -54,10 +54,10 @@ function buildItems(width: number, height: number): Item[] {
     h: DUCK_SIZE,
     x: 0,
     y: 0,
-    vx: rand(-0.3, 0.3),
-    vy: rand(-0.3, 0.3),
+    vx: rand(-0.14, 0.14),
+    vy: rand(-0.14, 0.14),
     angle: rand(-10, 10),
-    vAngle: rand(-0.1, 0.1),
+    vAngle: rand(-0.04, 0.04),
     el: null,
   });
 
@@ -135,19 +135,19 @@ export default function Pond() {
           it.vy = -Math.abs(it.vy) * 0.9;
         }
 
-        it.vx += (Math.random() - 0.5) * 0.015;
-        it.vy += (Math.random() - 0.5) * 0.015;
+        it.vx += (Math.random() - 0.5) * 0.006;
+        it.vy += (Math.random() - 0.5) * 0.006;
 
         const speed = Math.hypot(it.vx, it.vy);
-        const max = 0.9;
+        const max = 0.4;
         if (speed > max) {
           it.vx = (it.vx / speed) * max;
           it.vy = (it.vy / speed) * max;
         }
-        const min = 0.08;
+        const min = 0.03;
         if (speed < min) {
-          it.vx += (Math.random() - 0.5) * 0.05;
-          it.vy += (Math.random() - 0.5) * 0.05;
+          it.vx += (Math.random() - 0.5) * 0.02;
+          it.vy += (Math.random() - 0.5) * 0.02;
         }
 
         it.vAngle *= 0.99;
