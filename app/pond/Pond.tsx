@@ -357,7 +357,7 @@ function Envelope() {
 function RevealedCard({ coupon }: { coupon: Coupon }) {
   if (coupon.image) {
     return (
-      <div className="w-full h-full overflow-hidden bg-white ring-1 ring-black/10 shadow-2xl relative">
+      <div className="w-full h-full overflow-hidden bg-white ring-4 ring-white shadow-2xl relative">
         <Image
           src={coupon.image}
           alt={coupon.title}
