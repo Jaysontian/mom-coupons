@@ -16,7 +16,7 @@ export default function ScratchCard({
   width,
   height,
   storageKey,
-  threshold = 0.4,
+  threshold = 0.7,
   brushRadius = 24,
   children,
   onRevealed,
