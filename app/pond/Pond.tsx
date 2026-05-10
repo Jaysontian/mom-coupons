@@ -435,7 +435,6 @@ function Note() {
       />
       <div
         className="text-base italic leading-tight"
-        style={{ fontFamily: "ui-serif, Georgia, serif" }}
       >
         <span className="text-[10px] uppercase tracking-[0.2em] not-italic opacity-60 mr-1.5">
           From
@@ -444,7 +443,6 @@ function Note() {
       </div>
       <div
         className="mt-1.5 text-base italic leading-tight"
-        style={{ fontFamily: "ui-serif, Georgia, serif" }}
       >
         <span className="text-[10px] uppercase tracking-[0.2em] not-italic opacity-60 mr-1.5">
           To

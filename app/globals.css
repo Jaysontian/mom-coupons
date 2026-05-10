@@ -1,14 +1,14 @@
 @import "tailwindcss";
 
 @theme inline {
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-figtree);
 }
 
 html,
 body {
   background: #000;
   color: #fff;
-  font-family: var(--font-geist-sans), -apple-system, system-ui, sans-serif;
+  font-family: var(--font-figtree), -apple-system, system-ui, sans-serif;
   overscroll-behavior: none;
 }
 
