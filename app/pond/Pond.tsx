@@ -9,35 +9,87 @@ import ScratchCard from "../ScratchCard";
 const BASE_PATH =
   process.env.NODE_ENV === "production" ? "/mom-coupons" : "";
 
-type CardSeed = {
-  left: number;
-  top: number;
-  rotation: number;
-  duration: number;
-  delay: number;
-  drift: number;
+const ENV_W = 128;
+const ENV_H = 80;
+const DUCK_SIZE = 96;
+
+type Item = {
+  id: string;
+  kind: "envelope" | "duck";
+  coupon?: Coupon;
+  w: number;
+  h: number;
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  angle: number;
+  vAngle: number;
+  el: HTMLDivElement | null;
 };
 
-function seedFor(i: number, n: number): CardSeed {
-  const cols = 3;
-  const rows = Math.ceil(n / cols);
-  const col = i % cols;
-  const row = Math.floor(i / cols);
-  const jitterX = ((i * 37) % 60) / 10 - 3;
-  const jitterY = ((i * 53) % 60) / 10 - 3;
-  return {
-    left: 12 + col * (76 / Math.max(1, cols - 1)) + jitterX,
-    top: 18 + row * (60 / Math.max(1, rows - 1)) + jitterY,
-    rotation: ((i * 41) % 18) - 9,
-    duration: 8 + ((i * 17) % 50) / 10,
-    delay: ((i * 11) % 30) / 10,
-    drift: 14 + ((i * 7) % 12),
-  };
+function rand(min: number, max: number) {
+  return min + Math.random() * (max - min);
+}
+
+function buildItems(width: number, height: number): Item[] {
+  const items: Item[] = COUPONS.map((c) => ({
+    id: c.id,
+    kind: "envelope",
+    coupon: c,
+    w: ENV_W,
+    h: ENV_H,
+    x: 0,
+    y: 0,
+    vx: rand(-0.4, 0.4),
+    vy: rand(-0.4, 0.4),
+    angle: rand(-12, 12),
+    vAngle: rand(-0.15, 0.15),
+    el: null,
+  }));
+  items.push({
+    id: "duck",
+    kind: "duck",
+    w: DUCK_SIZE,
+    h: DUCK_SIZE,
+    x: 0,
+    y: 0,
+    vx: rand(-0.3, 0.3),
+    vy: rand(-0.3, 0.3),
+    angle: rand(-10, 10),
+    vAngle: rand(-0.1, 0.1),
+    el: null,
+  });
+
+  for (const it of items) {
+    let tries = 0;
+    while (tries++ < 80) {
+      it.x = rand(8, Math.max(8, width - it.w - 8));
+      it.y = rand(8, Math.max(8, height - it.h - 8));
+      let ok = true;
+      for (const other of items) {
+        if (other === it || !other.x) continue;
+        if (
+          it.x < other.x + other.w &&
+          it.x + it.w > other.x &&
+          it.y < other.y + other.h &&
+          it.y + it.h > other.y
+        ) {
+          ok = false;
+          break;
+        }
+      }
+      if (ok) break;
+    }
+  }
+  return items;
 }
 
 export default function Pond() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const rafRef = useRef(0);
   const [size, setSize] = useState({ w: 0, h: 0 });
+  const [items, setItems] = useState<Item[]>([]);
   const [selected, setSelected] = useState<Coupon | null>(null);
   const [revealed, setRevealed] = useState(false);
 
@@ -50,6 +102,112 @@ export default function Pond() {
     window.addEventListener("resize", update);
     return () => window.removeEventListener("resize", update);
   }, []);
+
+  useEffect(() => {
+    if (items.length > 0 || size.w === 0) return;
+    setItems(buildItems(size.w, size.h));
+  }, [size, items.length]);
+
+  useEffect(() => {
+    if (size.w === 0 || items.length === 0) return;
+
+    const tick = () => {
+      const w = size.w;
+      const h = size.h;
+
+      for (const it of items) {
+        it.x += it.vx;
+        it.y += it.vy;
+        it.angle += it.vAngle;
+
+        if (it.x < 0) {
+          it.x = 0;
+          it.vx = Math.abs(it.vx) * 0.9;
+        } else if (it.x + it.w > w) {
+          it.x = w - it.w;
+          it.vx = -Math.abs(it.vx) * 0.9;
+        }
+        if (it.y < 0) {
+          it.y = 0;
+          it.vy = Math.abs(it.vy) * 0.9;
+        } else if (it.y + it.h > h) {
+          it.y = h - it.h;
+          it.vy = -Math.abs(it.vy) * 0.9;
+        }
+
+        it.vx += (Math.random() - 0.5) * 0.015;
+        it.vy += (Math.random() - 0.5) * 0.015;
+
+        const speed = Math.hypot(it.vx, it.vy);
+        const max = 0.9;
+        if (speed > max) {
+          it.vx = (it.vx / speed) * max;
+          it.vy = (it.vy / speed) * max;
+        }
+        const min = 0.08;
+        if (speed < min) {
+          it.vx += (Math.random() - 0.5) * 0.05;
+          it.vy += (Math.random() - 0.5) * 0.05;
+        }
+
+        it.vAngle *= 0.99;
+        if (Math.abs(it.vAngle) < 0.02) {
+          it.vAngle += (Math.random() - 0.5) * 0.02;
+        }
+      }
+
+      for (let i = 0; i < items.length; i++) {
+        for (let j = i + 1; j < items.length; j++) {
+          const a = items[i];
+          const b = items[j];
+          const ox =
+            Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x);
+          const oy =
+            Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y);
+          if (ox <= 0 || oy <= 0) continue;
+
+          if (ox < oy) {
+            const push = ox / 2 + 0.5;
+            if (a.x < b.x) {
+              a.x -= push;
+              b.x += push;
+            } else {
+              a.x += push;
+              b.x -= push;
+            }
+            const t = a.vx;
+            a.vx = b.vx * 0.85;
+            b.vx = t * 0.85;
+          } else {
+            const push = oy / 2 + 0.5;
+            if (a.y < b.y) {
+              a.y -= push;
+              b.y += push;
+            } else {
+              a.y += push;
+              b.y -= push;
+            }
+            const t = a.vy;
+            a.vy = b.vy * 0.85;
+            b.vy = t * 0.85;
+          }
+          a.vAngle += (Math.random() - 0.5) * 0.1;
+          b.vAngle += (Math.random() - 0.5) * 0.1;
+        }
+      }
+
+      for (const it of items) {
+        if (it.el) {
+          it.el.style.transform = `translate(${it.x}px, ${it.y}px) rotate(${it.angle}deg)`;
+        }
+      }
+
+      rafRef.current = requestAnimationFrame(tick);
+    };
+
+    rafRef.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafRef.current);
+  }, [size, items]);
 
   return (
     <div
@@ -77,7 +235,7 @@ export default function Pond() {
 
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/40" />
 
-      <header className="absolute top-0 inset-x-0 z-20 px-6 pt-14 text-center">
+      <header className="absolute top-0 inset-x-0 z-20 px-6 pt-14 text-center pointer-events-none">
         <h1 className="text-3xl font-semibold tracking-tight text-white drop-shadow-lg">
           Happy Mother&apos;s Day
         </h1>
@@ -87,35 +245,36 @@ export default function Pond() {
       </header>
 
       <div className="absolute inset-0 z-10">
-        {COUPONS.map((c, i) => {
-          const s = seedFor(i, COUPONS.length);
-          return (
-            <button
-              key={c.id}
-              onClick={() => {
-                setSelected(c);
-                setRevealed(
-                  typeof window !== "undefined" &&
-                    localStorage.getItem(`mom-scratched-${c.id}`) === "1",
-                );
-              }}
-              className="absolute will-change-transform animate-[float_var(--dur)_ease-in-out_infinite]"
-              style={
-                {
-                  left: `${s.left}%`,
-                  top: `${s.top}%`,
-                  "--dur": `${s.duration}s`,
-                  "--delay": `${s.delay}s`,
-                  "--drift": `${s.drift}px`,
-                  "--rot": `${s.rotation}deg`,
-                  animationDelay: `${s.delay}s`,
-                } as React.CSSProperties
+        {items.map((it) => (
+          <div
+            key={it.id}
+            ref={(el) => {
+              it.el = el;
+              if (el) {
+                el.style.transform = `translate(${it.x}px, ${it.y}px) rotate(${it.angle}deg)`;
               }
-            >
-              <FoilTicket />
-            </button>
-          );
-        })}
+            }}
+            onClick={
+              it.kind === "envelope" && it.coupon
+                ? () => {
+                    setSelected(it.coupon!);
+                    setRevealed(
+                      typeof window !== "undefined" &&
+                        localStorage.getItem(
+                          `mom-scratched-${it.coupon!.id}`,
+                        ) === "1",
+                    );
+                  }
+                : undefined
+            }
+            className={`absolute top-0 left-0 will-change-transform ${
+              it.kind === "envelope" ? "cursor-pointer" : "pointer-events-none"
+            }`}
+            style={{ width: it.w, height: it.h }}
+          >
+            {it.kind === "envelope" ? <Envelope /> : <Duck />}
+          </div>
+        ))}
       </div>
 
       {selected && (
@@ -130,14 +289,11 @@ export default function Pond() {
   );
 }
 
-function FoilTicket() {
+function Envelope() {
   return (
     <div
-      className="w-32 h-20 shadow-2xl ring-1 ring-black/10 overflow-hidden relative"
-      style={{
-        background: "#f5ecd9",
-        transform: "rotate(var(--rot, 0deg))",
-      }}
+      className="w-full h-full shadow-2xl ring-1 ring-black/10 overflow-hidden relative"
+      style={{ background: "#f5ecd9" }}
     >
       <svg
         className="absolute inset-0 w-full h-full"
@@ -169,6 +325,21 @@ function FoilTicket() {
         </svg>
       </span>
       <span className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-black/5" />
+    </div>
+  );
+}
+
+function Duck() {
+  return (
+    <div className="w-full h-full relative drop-shadow-2xl">
+      <Image
+        src={`${BASE_PATH}/duck.png`}
+        alt="duck"
+        fill
+        sizes={`${DUCK_SIZE}px`}
+        className="object-contain"
+        priority
+      />
     </div>
   );
 }
